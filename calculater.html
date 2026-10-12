@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aesthetic Calculator</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #fce4ec, #e8eaf6);
+    }
+
+    .calculator {
+      width: 320px;
+      padding: 25px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.65);
+      box-shadow: 0 15px 40px rgba(150, 120, 160, 0.2);
+      backdrop-filter: blur(15px);
+    }
+
+    h2 {
+      text-align: center;
+      color: #8e789e;
+      margin-bottom: 20px;
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+
+    #display {
+      width: 100%;
+      height: 75px;
+      border: none;
+      outline: none;
+      border-radius: 18px;
+      background: #fff8fc;
+      color: #65536f;
+      text-align: right;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 28px;
+      box-shadow: inset 2px 2px 8px #eadce9;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    button {
+      height: 55px;
+      border: none;
+      border-radius: 18px;
+      font-size: 18px;
+      color: #75627e;
+      background: #fff8fc;
+      cursor: pointer;
+      box-shadow: 3px 3px 8px #e5d7e7;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      background: #f4e5f4;
+    }
+
+    button:active {
+      transform: scale(0.94);
+    }
+
+    .operator {
+      background: #eadcf5;
+      color: #8869a0;
+    }
+
+    .clear {
+      background: #f8dce7;
+      color: #b66d8b;
+    }
+
+    .equal {
+      background: #cbb8e8;
+      color: white;
+      grid-row: span 2;
+      height: 122px;
+    }
+
+    .zero {
+      grid-column: span 2;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: #aa94b2;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="calculator">
+    <h2>♡ CALCULATOR ♡</h2>
+
+    <input type="text" id="display"
+      placeholder="0" readonly>
+
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">AC</button>
+      <button class="operator" onclick="deleteLast()">⌫</button>
+      <button class="operator" onclick="append('%')">%</button>
+      <button class="operator" onclick="append('/')">÷</button>
+
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button class="operator" onclick="append('*')">×</button>
+
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button class="operator" onclick="append('-')">−</button>
+
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button class="operator" onclick="append('+')">+</button>
+
+      <button class="zero" onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+    </div>
+
+    <div class="footer">made with ♡</div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+
+    function append(value) {
+      if (display.value === "Error") {
+        display.value = "";
+      }
+      display.value += value;
+    }
+
+    function clearDisplay() {
+      display.value = "";
+    }
+
+    function deleteLast() {
+      display.value = display.value.slice(0, -1);
+    }
+
+    function calculate() {
+      try {
+        const expression = display.value;
+
+        if (!expression ||
+            !/^[0-9+\-*/%.() ]+$/.test(expression)) {
+          throw new Error("Invalid expression");
+        }
+
+        const result = Function(
+          '"use strict"; return (' + expression + ')'
+        )();
+
+        display.value = Number.isFinite(result)
+          ? String(Number(result.toPrecision(12)))
+          : "Error";
+      } catch {
+        display.value = "Error";
+      }
+    }
+  </script>
+</body>
+</html>
